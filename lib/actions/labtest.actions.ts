@@ -73,8 +73,7 @@ export const getLabTestRequest = async (newLabTestId: string) => {
   }
 };
 
-const PATIENTS_COLLECTION_ID = "672cd0d0001fddb6fe4c"; // Replace with your actual Patients Collection ID
-const LAB_REQUESTS_COLLECTION_ID = "67697870002962f96467"; // Replace with your actual Lab Requests Collection ID
+// Removed unused PATIENTS_COLLECTION_ID and LAB_REQUESTS_COLLECTION_ID constants
 
 
 export async function getAllPatients() {

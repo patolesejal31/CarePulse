@@ -24,7 +24,7 @@ export const createUser = async (user: CreateUserParams) => {
       user.name
     );
     return parseStringify(newUser);
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Check existing user
     if (error && error?.code === 409) {
       const existingUser = await users.list([
@@ -98,10 +98,9 @@ export const getPatient = async (userId: string) => {
     );
   }
 };
-export async function updatePatient({ userId, patientId, patientData }: { 
-  userId: string; 
+export async function updatePatient({ patientId, patientData }: { 
   patientId: string; 
-  patientData: Record<string, any>; 
+  patientData: Record<string, unknown>; 
 }) {
   try {
     const updatedPatient = await databases.updateDocument(

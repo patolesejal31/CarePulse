@@ -1,7 +1,7 @@
 // Ensure you're correctly importing Appwrite configuration
 
 import { ID, Query } from "node-appwrite";
-import { databases, DOCTOR_COLLECTION_ID, messaging } from "../appwrite.config";
+import { databases, messaging } from "../appwrite.config";
 import { parseStringify } from "../utils";
 
 export const sendSMS = async (userId: string, content: string) => {
