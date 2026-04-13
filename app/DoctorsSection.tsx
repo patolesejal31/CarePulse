@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const doctors = [
-  { 
+  {
     image: "/assets/images/john_green.png",
     name: "John Green",
     specialization: "Cardiologist",
@@ -9,7 +9,7 @@ const doctors = [
     qualification: "MD, FACC",
     description: "Expert in heart diseases, angioplasty, and preventive cardiology.",
   },
-  { 
+  {
     image: "/assets/images/leila_cameron.png",
     name: "Leila Cameron",
     specialization: "Pediatrician",
@@ -17,7 +17,7 @@ const doctors = [
     qualification: "MD, FAAP",
     description: "Specialist in child healthcare, vaccinations, and growth monitoring.",
   },
-  { 
+  {
     image: "/assets/images/david_livingston.png",
     name: "David Livingston",
     specialization: "Orthopedic Surgeon",
@@ -25,7 +25,7 @@ const doctors = [
     qualification: "MS Ortho, FRCS",
     description: "Experienced in joint replacements, fractures, and sports injuries.",
   },
-  { 
+  {
     image: "/assets/images/evan_peter.png",
     name: "Evan Peter",
     specialization: "Neurologist",
@@ -33,7 +33,7 @@ const doctors = [
     qualification: "DM Neurology",
     description: "Specializes in treating brain disorders, strokes, and epilepsy.",
   },
-  { 
+  {
     image: "/assets/images/jane_powell.png",
     name: "Jane Powell",
     specialization: "Dermatologist",
@@ -41,7 +41,7 @@ const doctors = [
     qualification: "MD Dermatology",
     description: "Expert in skincare, laser treatments, and cosmetic dermatology.",
   },
-  { 
+  {
     image: "/assets/images/alex_remirez.png",
     name: "Alex Ramirez",
     specialization: "Endocrinologist",
@@ -49,7 +49,7 @@ const doctors = [
     qualification: "MD, DM Endocrinology",
     description: "Manages diabetes, thyroid disorders, and hormonal imbalances.",
   },
-  { 
+  {
     image: "/assets/images/jasmine_lee.png",
     name: "Jasmine Lee",
     specialization: "Gynecologist",
@@ -57,7 +57,7 @@ const doctors = [
     qualification: "MD, DGO",
     description: "Specializes in pregnancy care, fertility, and women's health.",
   },
-  { 
+  {
     image: "/assets/images/alyana_cruz.png",
     name: "Alyana Cruz",
     specialization: "Oncologist",
@@ -65,7 +65,7 @@ const doctors = [
     qualification: "MD, DM Oncology",
     description: "Expert in cancer treatments, chemotherapy, and radiation therapy.",
   },
-  { 
+  {
     image: "/assets/images/hardik_sharma.png",
     name: "Hardik Sharma",
     specialization: "General Physician",
@@ -86,17 +86,17 @@ const DoctorsSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {doctors.map((doctor, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="bg-white p-8 rounded-[3rem] shadow-xl border border-[#740938]/5 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center text-center group"
             >
               <div className="relative mb-6">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#AF1740] to-[#740938] rounded-full blur-lg opacity-20 scale-110 group-hover:opacity-40 transition-opacity"></div>
-                <Image 
-                  src={doctor.image} 
-                  alt={doctor.name} 
-                  width={150} 
-                  height={150} 
+                <Image
+                  src={doctor.image}
+                  alt={doctor.name}
+                  width={150}
+                  height={150}
                   className="relative rounded-full border-4 border-[#ffcf56] shadow-md object-cover w-32 h-32 transform transition-transform group-hover:scale-105"
                 />
               </div>
@@ -105,8 +105,8 @@ const DoctorsSection = () => {
                 {doctor.specialization}
               </p>
               <div className="space-y-1 mb-4">
-                 <p className="text-gray-600 font-semibold text-sm">{doctor.qualification}</p>
-                 <p className="text-gray-400 text-xs italic">Experience: {doctor.experience}</p>
+                <p className="text-gray-600 font-semibold text-sm">{doctor.qualification}</p>
+                <p className="text-gray-400 text-xs italic">Experience: {doctor.experience}</p>
               </div>
               <p className="text-gray-700 text-sm leading-relaxed">{doctor.description}</p>
             </div>
