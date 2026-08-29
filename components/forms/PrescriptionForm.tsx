@@ -6,8 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { Form } from "../ui/form";
 import { SelectItem } from "@/components/ui/select";
-import { databases } from "@/lib/appwrite.config";
-import { getDoctorDetails, getAllPatients } from "@/lib/actions/prescription.actions";
+import { getDoctorDetails, getAllPatients, submitPrescriptionForm } from "@/lib/actions/prescription.actions";
 import CustomFormField, { FormFieldType } from "../ui/CustomFormField";
 import SubmitButton from "../ui/SubmitButton";
 import Alert from "../Alert/alert";
@@ -98,24 +97,13 @@ export const PrescriptionForm = ({ doctorId, isLoading, buttonLabel }: Prescript
         notes: data.notes || "",
       };
   
-      // Save each medicine entry as a document
-      const responses = await Promise.all(
-        data.medicines.map((med) =>
-          databases.createDocument(
-            "672cd052000155a2740d", // Database ID
-            "677f931f001d0746bbb0", // Collection ID
-            "unique()", // Unique ID for the document
-            {
-              ...commonFields,
-              medicationName: med.name,
-              dosage: med.dosage,
-              frequency: med.frequency,
-            }
-          )
-        )
-      );
+      // Save each medicine entry as a document via Server Action
+      const result = await submitPrescriptionForm(data.medicines, commonFields);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to submit prescription.");
+      }
   
-      console.log("Medicines saved successfully:", responses);
+      console.log("Medicines saved successfully:", result.data);
       setAlertMessage("Prescription created successfully!");
       setShowAlert(true);
       

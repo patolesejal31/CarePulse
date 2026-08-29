@@ -1,3 +1,4 @@
+"use server";
 // Ensure you're correctly importing Appwrite configuration
 
 import { ID, Query } from "node-appwrite";
@@ -218,5 +219,28 @@ export const getPrescriptions = async (userId: string) => {
       error
     );
     return [];
+  }
+};
+export const submitPrescriptionForm = async (medicines: any[], commonFields: any) => {
+  try {
+    const responses = await Promise.all(
+      medicines.map((med) =>
+        databases.createDocument(
+          "672cd052000155a2740d",
+          "677f931f001d0746bbb0",
+          ID.unique(),
+          {
+            ...commonFields,
+            medicationName: med.name,
+            dosage: med.dosage,
+            frequency: med.frequency,
+          }
+        )
+      )
+    );
+    return { success: true, data: responses };
+  } catch (error: any) {
+    console.error("Error submitting prescription form:", error);
+    return { success: false, error: error.message };
   }
 };

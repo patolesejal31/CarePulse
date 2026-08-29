@@ -1,3 +1,4 @@
+"use server";
 import { Databases, Query } from "node-appwrite";
 import {  APPOINTMENT_COLLECTION_ID, DATABASE_ID, databases } from "../appwrite.config";
 import { parseStringify } from "../utils";
@@ -97,3 +98,66 @@ export const submitFeedback = async (doctorId: string, feedback: string) => {
   }
 };
 
+export const loginDoctor = async ({ email, password }: any) => {
+  try {
+    const doctors = await databases.listDocuments(
+      "672cd052000155a2740d",
+      "672cd14e0035fd25da8a",
+      [Query.equal("email", email)]
+    );
+
+    if (doctors.total === 0) {
+      return { success: false, error: "Doctor not found" };
+    }
+
+    const doctor = doctors.documents[0];
+    if (doctor.password !== password) {
+      return { success: false, error: "Invalid password" };
+    }
+
+    return { success: true, doctorId: doctor.$id };
+  } catch (error: any) {
+    console.error("Login error:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const resetDoctorPassword = async ({ email, newPassword }: any) => {
+  try {
+    const doctors = await databases.listDocuments(
+      "672cd052000155a2740d",
+      "672cd14e0035fd25da8a",
+      [Query.equal("email", email)]
+    );
+
+    if (doctors.total > 0) {
+      const doctor = doctors.documents[0];
+      await databases.updateDocument(
+        "672cd052000155a2740d",
+        "672cd14e0035fd25da8a",
+        doctor.$id,
+        { password: newPassword }
+      );
+      return { success: true };
+    } else {
+      return { success: false, error: "Doctor not found" };
+    }
+  } catch (error: any) {
+    console.error("Reset password error:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const checkDoctorExists = async (email: string) => {
+  try {
+    const doctors = await databases.listDocuments(
+      "672cd052000155a2740d",
+      "672cd14e0035fd25da8a",
+      [Query.equal("email", email)]
+    );
+    return { exists: doctors.total > 0 };
+  } catch (error: any) {
+    console.error("Check email error:", error);
+    return { exists: false, error: error.message };
+  }
+};

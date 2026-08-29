@@ -27,10 +27,8 @@ const PrescriptionsPage = async (props: { params: Promise<{ doctorId: string }> 
           </div>
 
           <PrescriptionForm
-            doctorId={doctorId} isLoading={false} buttonLabel={""} /
-          >
-
-          <br></br>
+            doctorId={doctorId} isLoading={false} buttonLabel={""}
+          />          <br></br>
           <br></br>
           <Button variant="outline" className="shad-primary-btn" asChild>
             <Link href={`/doctor/${doctorId}/dashboard`}>
@@ -52,4 +50,4 @@ const PrescriptionsPage = async (props: { params: Promise<{ doctorId: string }> 
   );
 };
 
-export default getPrescription;
+export default PrescriptionsPage;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Client, Databases, Query } from "node-appwrite";
+import { loginDoctor, resetDoctorPassword, checkDoctorExists } from "@/lib/actions/doctor.actions";
 
 import { Form } from "@/components/ui/form";
 import CustomFormField, { FormFieldType } from "@/components/ui/CustomFormField";
@@ -16,12 +16,6 @@ const DoctorLoginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-const client = new Client();
-client
-  .setEndpoint("https://cloud.appwrite.io/v1") // Your Appwrite endpoint
-  .setProject("6717ba3f003448972ea1"); // Your Appwrite project ID
-
-const databases = new Databases(client);
 
 const DoctorLoginForm = () => {
   const router = useRouter();
@@ -52,27 +46,16 @@ const DoctorLoginForm = () => {
     setSuccessMessage("");
 
     try {
-      // Query the database to find the doctor by email
-      const doctors = await databases.listDocuments(
-        "672cd052000155a2740d", // Replace with your database ID
-        "672cd14e0035fd25da8a", // Replace with your collection ID
-        [Query.equal("email", values.email)]
-      );
+      const result = await loginDoctor({ email: values.email, password: values.password });
 
-      if (doctors.total === 0) {
-        throw new Error("Doctor not found");
-      }
-
-      const doctor = doctors.documents[0];
-      if (doctor.password !== values.password) {
-        throw new Error("Invalid password");
+      if (!result.success) {
+        throw new Error(result.error || "Login failed");
       }
 
       // Successful login, redirect to the doctor's dashboard
-      router.push(`/doctor/${doctor.$id}/dashboard`);
+      router.push(`/doctor/${result.doctorId}/dashboard`);
     } catch (error: any) {
       setErrorMessage(error.message);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -88,13 +71,9 @@ const DoctorLoginForm = () => {
     setErrorMessage(""); // Clear previous errors
     setSuccessMessage(""); // Clear previous success messages
 
-    const doctors = await databases.listDocuments(
-      "672cd052000155a2740d", // Database ID
-      "672cd14e0035fd25da8a", // Collection ID
-      [Query.equal("email", doctorEmail)]
-    );
+    const result = await checkDoctorExists(doctorEmail);
 
-    if (doctors.total === 0) {
+    if (!result.exists) {
       setErrorMessage("Doctor not found.");
       return;
     }
@@ -123,22 +102,13 @@ const DoctorLoginForm = () => {
     }
 
     // Update password in the database
-    const doctors = await databases.listDocuments(
-      "672cd052000155a2740d", // Database ID
-      "672cd14e0035fd25da8a", // Collection ID
-      [Query.equal("email", doctorEmail)]
-    );
+    const result = await resetDoctorPassword({ email: doctorEmail, newPassword });
 
-    if (doctors.total > 0) {
-      const doctor = doctors.documents[0];
-      await databases.updateDocument(
-        "672cd052000155a2740d", // Database ID
-        "672cd14e0035fd25da8a", // Collection ID
-        doctor.$id,
-        { password: newPassword }
-      );
+    if (result.success) {
       setSuccessMessage("Password reset successfully.");
       setIsForgotPassword(false); // Return to login after successful password reset
+    } else {
+      setErrorMessage(result.error || "Failed to reset password.");
     }
   };
 
